@@ -64,4 +64,4 @@ Dashboard được cấu trúc để hỗ trợ ba cấp độ ra quyết địn
 - **Chỉ số**: Tổng doanh thu & % Tăng trưởng.
 
 ---
-*Được thực hiện bởi Senior Frontend Engineer & BI Analyst*
+*Được thực hiện bởi Nhóm Tứ Linh*
