@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "name": "Điện gia dụng",
+    "slug": "dien-gia-dung",
+    "description": "Sản phẩm gia dụng thiết yếu",
+    "image_url": null,
+    "parent_id": null,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 2,
+    "name": "Nhà thông minh",
+    "slug": "nha-thong-minh",
+    "description": "Thiết bị thông minh cho gia đình",
+    "image_url": null,
+    "parent_id": null,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 3,
+    "name": "Điện lạnh",
+    "slug": "dien-lanh",
+    "description": "Thiết bị làm mát và bảo quản",
+    "image_url": null,
+    "parent_id": null,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 4,
+    "name": "Chăm sóc cá nhân",
+    "slug": "cham-soc-ca-nhan",
+    "description": "Thiết bị chăm sóc sức khỏe và làm đẹp",
+    "image_url": null,
+    "parent_id": null,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 5,
+    "name": "Nhà bếp",
+    "slug": "nha-bep",
+    "description": "Thiết bị nhà bếp",
+    "image_url": null,
+    "parent_id": 1,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 6,
+    "name": "Phòng khách",
+    "slug": "phong-khach",
+    "description": "Thiết bị phòng khách",
+    "image_url": null,
+    "parent_id": 1,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 7,
+    "name": "Thiết bị làm mát",
+    "slug": "thiet-bi-lam-mat",
+    "description": "Tủ lạnh, máy lạnh, tủ đông",
+    "image_url": null,
+    "parent_id": 3,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 8,
+    "name": "An ninh",
+    "slug": "an-ninh",
+    "description": "Thiết bị an ninh",
+    "image_url": null,
+    "parent_id": 2,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 9,
+    "name": "Đèn chiếu sáng",
+    "slug": "den-chieu-sang",
+    "description": "Hệ thống đèn thông minh",
+    "image_url": null,
+    "parent_id": 2,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 10,
+    "name": "Chăm sóc tóc",
+    "slug": "cham-soc-toc",
+    "description": "Máy sấy, máy tạo kiểu",
+    "image_url": null,
+    "parent_id": 4,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 11,
+    "name": "Theo dõi sức khỏe",
+    "slug": "theo-doi-suc-khoe",
+    "description": "Cân điện tử, máy massage",
+    "image_url": null,
+    "parent_id": 4,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 12,
+    "name": "Nồi chiên không dầu",
+    "slug": "noi-chien-khong-dau",
+    "description": "Nồi chiên không dầu các loại",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 5,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 13,
+    "name": "Lò vi sóng",
+    "slug": "lo-vi-song",
+    "description": "Lò vi sóng, lò nướng",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 5,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 14,
+    "name": "Quạt điện",
+    "slug": "quat-dien",
+    "description": "Quạt đứng, quạt trần",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 6,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 15,
+    "name": "Máy lọc không khí",
+    "slug": "may-loc-khong-khi",
+    "description": "Máy lọc không khí chuyên sâu",
+    "image_url": "https://images.unsplash.com/photo-1626430451221-0f3f12289c43",
+    "parent_id": 6,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 16,
+    "name": "Tủ lạnh Inverter",
+    "slug": "tu-lanh-inverter",
+    "description": "Tủ lạnh tiết kiệm điện",
+    "image_url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a",
+    "parent_id": 7,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 17,
+    "name": "Máy lạnh 1 chiều",
+    "slug": "may-lanh-1-chieu",
+    "description": "Điều hòa không khí 1 chiều",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 7,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 18,
+    "name": "Camera an ninh",
+    "slug": "camera-an-ninh",
+    "description": "Camera IP, Camera ngoài trời",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 8,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 19,
+    "name": "Khóa cửa vân tay",
+    "slug": "khoa-cua-van-tay",
+    "description": "Khóa cửa nhận diện vân tay",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 8,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 20,
+    "name": "Đèn LED thông minh",
+    "slug": "den-led-thong-minh",
+    "description": "Đèn LED đổi màu qua App",
+    "image_url": "https://images.unsplash.com/photo-1585515320310-259814833e62",
+    "parent_id": 9,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 21,
+    "name": "Máy sấy tóc",
+    "slug": "may-say-toc",
+    "description": "Máy sấy tóc ion âm",
+    "image_url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702",
+    "parent_id": 10,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 22,
+    "name": "Cân sức khỏe điện tử",
+    "slug": "can-suc-khoe-dien-tu",
+    "description": "Cân đo chỉ số cơ thể thông minh",
+    "image_url": "https://images.unsplash.com/photo-1610484253163-999335f47055",
+    "parent_id": 11,
+    "is_active": 1,
+    "created_at": "2026-04-30 13:35:44"
+  },
+  {
+    "id": 23,
+    "name": "Chăm sóc nhà cửa",
+    "slug": "cham-soc-nha-cua",
+    "description": "Thiết bị vệ sinh và làm sạch nhà cửa",
+    "image_url": null,
+    "parent_id": null,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 24,
+    "name": "Làm sạch không gian",
+    "slug": "lam-sach-khong-gian",
+    "description": "Robot hút bụi và máy hút bụi",
+    "image_url": null,
+    "parent_id": 23,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 25,
+    "name": "Robot hút bụi",
+    "slug": "robot-hut-bui",
+    "description": "Robot hút bụi lau nhà thông minh",
+    "image_url": "http://localhost:8000/static/uploads/cat_robot.jpg",
+    "parent_id": 24,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 26,
+    "name": "Máy hút bụi cầm tay",
+    "slug": "may-hut-bui-cam-tay",
+    "description": "Máy hút bụi không dây tiện lợi",
+    "image_url": "http://localhost:8000/static/uploads/cat_hutbui.jpg",
+    "parent_id": 24,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 27,
+    "name": "Thiết bị giải trí",
+    "slug": "thiet-bi-giai-tri",
+    "description": "Thiết bị nghe nhìn và giải trí gia đình",
+    "image_url": null,
+    "parent_id": null,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 28,
+    "name": "Nghe nhìn",
+    "slug": "nghe-nhin",
+    "description": "Tivi và hệ thống âm thanh",
+    "image_url": null,
+    "parent_id": 27,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 29,
+    "name": "Tivi thông minh",
+    "slug": "tivi-thong-minh",
+    "description": "Smart Tivi 4K, OLED",
+    "image_url": "http://localhost:8000/static/uploads/cat_tivi.jpg",
+    "parent_id": 28,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  },
+  {
+    "id": 30,
+    "name": "Loa Soundbar",
+    "slug": "loa-soundbar",
+    "description": "Loa thanh Soundbar xem phim",
+    "image_url": "http://localhost:8000/static/uploads/cat_soundbar.jpg",
+    "parent_id": 28,
+    "is_active": 1,
+    "created_at": "2026-05-01 15:27:28"
+  }
+]
