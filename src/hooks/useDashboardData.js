@@ -54,21 +54,36 @@ export const useDashboardData = (filters) => {
     const aov = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
     // Growth calculation (comparing with previous period of same length)
-    // For simplicity in this demo, we'll just show trend based on the latest 7 days vs previous 7 days
-    const latestDate = new Date();
+    // Use the latest date from the actual data instead of "today" to ensure we have data to compare
+    const latestDate = transformedData.length > 0 
+      ? new Date(Math.max(...transformedData.map(o => o.date.getTime())))
+      : new Date();
+    
     const periodLength = 7;
     const currentPeriodStart = subDays(latestDate, periodLength);
     const prevPeriodStart = subDays(currentPeriodStart, periodLength);
 
-    const currentRev = transformedData
-      .filter(o => isWithinInterval(o.date, { start: currentPeriodStart, end: latestDate }))
+    // Helper to calculate revenue for a specific period
+    const getRevForPeriod = (start, end) => transformedData
+      .filter(o => o.date >= start && o.date <= end)
       .reduce((sum, o) => sum + o.total_amount, 0);
-    
-    const prevRev = transformedData
-      .filter(o => isWithinInterval(o.date, { start: prevPeriodStart, end: currentPeriodStart }))
-      .reduce((sum, o) => sum + o.total_amount, 0);
-    
+
+    // Helper to calculate orders for a specific period
+    const getOrdersForPeriod = (start, end) => transformedData
+      .filter(o => o.date >= start && o.date <= end).length;
+
+    const currentRev = getRevForPeriod(currentPeriodStart, latestDate);
+    const prevRev = getRevForPeriod(prevPeriodStart, currentPeriodStart);
     const revenueGrowth = prevRev > 0 ? ((currentRev - prevRev) / prevRev) * 100 : 0;
+
+    const currentOrders = getOrdersForPeriod(currentPeriodStart, latestDate);
+    const prevOrders = getOrdersForPeriod(prevPeriodStart, currentPeriodStart);
+    const ordersGrowth = prevOrders > 0 ? ((currentOrders - prevOrders) / prevOrders) * 100 : 0;
+
+    // For AOV growth
+    const currentAOV = currentOrders > 0 ? currentRev / currentOrders : 0;
+    const prevAOV = prevOrders > 0 ? prevRev / prevOrders : 0;
+    const aovGrowth = prevAOV > 0 ? ((currentAOV - prevAOV) / prevAOV) * 100 : 0;
 
     return {
       totalRevenue,
@@ -76,6 +91,8 @@ export const useDashboardData = (filters) => {
       conversionRate,
       aov,
       revenueGrowth,
+      ordersGrowth,
+      aovGrowth,
       paidOrders
     };
   }, [filteredData, transformedData]);

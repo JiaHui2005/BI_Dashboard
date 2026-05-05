@@ -92,21 +92,21 @@ export const KPISection = ({ stats, timeTrend }) => {
       <KPICard 
         title="Tổng đơn hàng" 
         value={stats.totalOrders} 
-        trend={5.2} 
+        trend={stats.ordersGrowth} 
         icon={ShoppingBag}
         data={dummyTrend.map(d => ({ value: d.value / 100000 }))} 
       />
       <KPICard 
         title="Tỉ lệ chuyển đổi" 
         value={`${stats.conversionRate.toFixed(1)}%`} 
-        trend={-1.4} 
+        trend={0.0} 
         icon={Percent}
         data={[{value: 10}, {value: 15}, {value: 12}, {value: 18}, {value: 16}, {value: 14}, {value: 20}]}
       />
       <KPICard 
         title="Giá trị TB đơn" 
         value={Math.round(stats.aov)} 
-        trend={2.8} 
+        trend={stats.aovGrowth} 
         icon={CreditCard} 
         unit="₫"
         data={dummyTrend}
