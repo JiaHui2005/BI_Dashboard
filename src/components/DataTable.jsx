@@ -37,6 +37,7 @@ export const DataTable = ({ data }) => {
       direction = 'desc';
     }
     setSortConfig({ key, direction });
+    setCurrentPage(1);
   };
 
   return (
@@ -63,17 +64,53 @@ export const DataTable = ({ data }) => {
         <thead>
           <tr>
             <th onClick={() => requestSort('order_code')} style={{ cursor: 'pointer' }}>
-              Mã đơn hàng {sortConfig.key === 'order_code' && (sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Mã đơn hàng 
+                <span style={{ opacity: sortConfig.key === 'order_code' ? 1 : 0.3 }}>
+                  {sortConfig.key === 'order_code' && sortConfig.direction === 'desc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                </span>
+              </div>
             </th>
             <th onClick={() => requestSort('total_amount')} style={{ cursor: 'pointer' }}>
-              Số tiền {sortConfig.key === 'total_amount' && (sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Số tiền 
+                <span style={{ opacity: sortConfig.key === 'total_amount' ? 1 : 0.3 }}>
+                  {sortConfig.key === 'total_amount' && sortConfig.direction === 'desc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                </span>
+              </div>
             </th>
-            <th>Trạng thái</th>
-            <th>Thanh toán</th>
+            <th onClick={() => requestSort('status')} style={{ cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Trạng thái 
+                <span style={{ opacity: sortConfig.key === 'status' ? 1 : 0.3 }}>
+                  {sortConfig.key === 'status' && sortConfig.direction === 'desc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                </span>
+              </div>
+            </th>
+            <th onClick={() => requestSort('payment_status')} style={{ cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Thanh toán 
+                <span style={{ opacity: sortConfig.key === 'payment_status' ? 1 : 0.3 }}>
+                  {sortConfig.key === 'payment_status' && sortConfig.direction === 'desc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                </span>
+              </div>
+            </th>
             <th onClick={() => requestSort('created_at')} style={{ cursor: 'pointer' }}>
-              Ngày tạo {sortConfig.key === 'created_at' && (sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Ngày tạo 
+                <span style={{ opacity: sortConfig.key === 'created_at' ? 1 : 0.3 }}>
+                  {sortConfig.key === 'created_at' && sortConfig.direction === 'desc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                </span>
+              </div>
             </th>
-            <th>Khu vực</th>
+            <th onClick={() => requestSort('region')} style={{ cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                Khu vực 
+                <span style={{ opacity: sortConfig.key === 'region' ? 1 : 0.3 }}>
+                  {sortConfig.key === 'region' && sortConfig.direction === 'desc' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                </span>
+              </div>
+            </th>
             <th>Thao tác</th>
           </tr>
         </thead>

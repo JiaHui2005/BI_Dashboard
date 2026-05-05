@@ -89,8 +89,14 @@ export const ChartsSection = ({ chartsData }) => {
             tickFormatter={(val) => `${(val / 1000000).toFixed(1)}Tr`}
           />
           <Tooltip
-            contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-            itemStyle={{ color: '#38bdf8' }}
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)', 
+              borderRadius: '12px',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+            }}
+            itemStyle={{ color: 'var(--primary-color)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700, marginBottom: '4px' }}
           />
           <Line
             name="Doanh thu"
@@ -117,7 +123,15 @@ export const ChartsSection = ({ chartsData }) => {
             height={60}
           />
           <YAxis stroke="#94a3b8" fontSize={12} tickFormatter={(val) => `${(val / 1000000).toFixed(1)}Tr`} />
-          <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px'
+            }}
+            itemStyle={{ color: 'var(--primary-color)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700 }}
+          />
           <Bar name="Doanh thu" dataKey="value" radius={[4, 4, 0, 0]}>
             {chartsData.regionRevenue.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={index < 3 ? '#38bdf8' : '#64748b'} />
@@ -132,7 +146,15 @@ export const ChartsSection = ({ chartsData }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
           <XAxis type="number" hide />
           <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={10} width={120} />
-          <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px'
+            }}
+            itemStyle={{ color: 'var(--success-color)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700 }}
+          />
           <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ChartWrapper>
@@ -142,7 +164,15 @@ export const ChartsSection = ({ chartsData }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
           <XAxis type="number" hide />
           <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={10} width={120} />
-          <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px'
+            }}
+            itemStyle={{ color: 'var(--danger-color)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700 }}
+          />
           <Bar dataKey="value" fill="#f43f5e" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ChartWrapper>
@@ -153,7 +183,15 @@ export const ChartsSection = ({ chartsData }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
           <XAxis type="number" hide />
           <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={10} width={120} />
-          <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px'
+            }}
+            itemStyle={{ color: 'var(--primary-color)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700 }}
+          />
           <Bar dataKey="value" fill="#38bdf8" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ChartWrapper>
@@ -163,7 +201,15 @@ export const ChartsSection = ({ chartsData }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
           <XAxis type="number" hide />
           <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={10} width={120} />
-          <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px'
+            }}
+            itemStyle={{ color: 'var(--warning-color)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700 }}
+          />
           <Bar dataKey="value" fill="#f59e0b" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ChartWrapper>
@@ -186,7 +232,13 @@ export const ChartsSection = ({ chartsData }) => {
             ))}
           </Pie>
           <Tooltip
-            contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)' }}
+            contentStyle={{ 
+              backgroundColor: 'var(--surface-color)', 
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px'
+            }}
+            itemStyle={{ color: 'var(--text-main)', fontWeight: 600 }}
+            labelStyle={{ color: 'var(--text-main)', fontWeight: 700 }}
             formatter={(value) => `${(value / 1000000).toFixed(2)} Tr VNĐ`}
           />
           <Legend verticalAlign="bottom" height={36} />
