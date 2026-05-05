@@ -41,22 +41,23 @@ export const DataTable = ({ data }) => {
 
   return (
     <div className="card glass table-container">
-      <div className="chart-header">
+      <div className="table-header">
         <h3>Danh sách đơn hàng</h3>
-        <div className="filter-group" style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Search size={18} color="#94a3b8" />
+        <div className="table-search-container">
+          <Search size={20} />
           <input
             type="text"
-            placeholder="Tìm kiếm đơn hàng..."
+            placeholder="Tìm kiếm mã đơn, khách hàng..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            style={{ minWidth: '250px' }}
           />
         </div>
       </div>
+
+      <div className="table-wrapper">
 
       <table>
         <thead>
@@ -106,6 +107,7 @@ export const DataTable = ({ data }) => {
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="pagination">
         <button
@@ -130,33 +132,76 @@ export const DataTable = ({ data }) => {
       {selectedOrder && (
         <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
           <div className="glass modal-content" onClick={e => e.stopPropagation()}>
-            <div className="chart-header">
-              <h2>Chi tiết đơn hàng: {selectedOrder.order_code}</h2>
-              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>&times;</button>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '1rem' }}>
-              <div>
-                <h4 style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>Thông tin khách hàng</h4>
-                <p><strong>Họ tên:</strong> {selectedOrder.recipient_name}</p>
-                <p><strong>Điện thoại:</strong> {selectedOrder.phone_number}</p>
-                <p><strong>Địa chỉ:</strong> {selectedOrder.shipping_address}</p>
-              </div>
-              <div>
-                <h4 style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>Thông tin thanh toán</h4>
-                <p><strong>Số tiền:</strong> {selectedOrder.total_amount.toLocaleString()}₫</p>
-                <p><strong>Phương thức:</strong> {selectedOrder.payment_method}</p>
-                <p><strong>Trạng thái:</strong> {selectedOrder.payment_status === 'paid' ? 'Đã thanh toán' : 'Chờ thanh toán'}</p>
-              </div>
-            </div>
-            <div style={{ marginTop: '2rem' }}>
-              <h4 style={{ color: 'var(--text-muted)', marginBottom: '0.5rem' }}>BI Insight (Gợi ý phân tích)</h4>
-              <p style={{ background: 'rgba(56, 189, 248, 0.1)', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid var(--primary-color)' }}>
-                {selectedOrder.status === 'pending'
-                  ? "Đơn hàng đang chờ xử lý. Hành động vận hành: Kiểm tra tồn kho và xác nhận giao hàng."
-                  : selectedOrder.payment_status === 'pending'
-                    ? "Chưa hoàn tất thanh toán. Hành động chiến thuật: Gửi nhắc nhở thanh toán hoặc kiểm tra cổng thanh toán."
-                    : "Đơn hàng đã hoàn tất thành công. Nhận định: Giá trị vòng đời khách hàng (LTV) đang tăng."}
+            <button className="modal-close-btn" onClick={() => setSelectedOrder(null)}>&times;</button>
+            
+            <div className="modal-body">
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.75rem', marginBottom: '0.5rem' }}>
+                Chi tiết đơn hàng
+              </h2>
+              <p style={{ color: 'var(--primary-color)', fontWeight: 700, letterSpacing: '0.1em' }}>
+                #{selectedOrder.order_code}
               </p>
+
+              <div className="detail-grid">
+                <div className="detail-section">
+                  <h4>Thông tin khách hàng</h4>
+                  <div className="detail-item">
+                    <span className="detail-label">Họ tên</span>
+                    <span className="detail-value">{selectedOrder.recipient_name}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Điện thoại</span>
+                    <span className="detail-value">{selectedOrder.phone_number}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Địa chỉ</span>
+                    <span className="detail-value">{selectedOrder.shipping_address}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Khu vực</span>
+                    <span className="detail-value">{selectedOrder.region}</span>
+                  </div>
+                </div>
+
+                <div className="detail-section">
+                  <h4>Thông tin đơn hàng</h4>
+                  <div className="detail-item">
+                    <span className="detail-label">Tổng tiền</span>
+                    <span className="detail-value" style={{ color: 'var(--primary-color)', fontSize: '1.25rem' }}>
+                      {selectedOrder.total_amount.toLocaleString()}₫
+                    </span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Ngày tạo</span>
+                    <span className="detail-value">{selectedOrder.created_at}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Trạng thái</span>
+                    <span className={`status-badge status-${selectedOrder.status}`}>
+                      {selectedOrder.status === 'pending' ? 'Chờ xử lý' : selectedOrder.status === 'shipped' ? 'Đang giao' : 'Đã giao'}
+                    </span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Thanh toán</span>
+                    <span className={`payment-${selectedOrder.payment_status}`}>
+                      {selectedOrder.payment_status === 'paid' ? 'Đã thanh toán' : 'Chờ thanh toán'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="insight-box">
+                <h4 style={{ color: 'var(--primary-color)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Eye size={18} /> BI Analytics Insight
+                </h4>
+                <p style={{ fontSize: '0.95rem', lineHeight: '1.6', fontWeight: 500 }}>
+                  {selectedOrder.status === 'pending'
+                    ? "Hệ thống khuyến nghị: Đơn hàng này đang ở trạng thái chờ. Cần kiểm tra tồn kho tại khu vực " + selectedOrder.region + " để tối ưu thời gian giao hàng."
+                    : selectedOrder.payment_status === 'pending'
+                      ? "Phân tích tài chính: Đơn hàng có giá trị cao nhưng chưa hoàn tất thanh toán. Đề xuất gửi thông báo nhắc nhở tự động sau 24h."
+                      : "Nhận định kinh doanh: Khách hàng này đóng góp tích cực vào doanh thu khu vực " + selectedOrder.region + ". Đề xuất đưa vào danh sách khách hàng thân thiết."}
+                </p>
+              </div>
             </div>
           </div>
         </div>

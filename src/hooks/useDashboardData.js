@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
-import { parseISO, format, isWithinInterval, startOfDay, subDays, differenceInDays } from 'date-fns';
+import { parseISO, format, isWithinInterval, startOfDay, endOfDay, subDays, differenceInDays } from 'date-fns';
 import rawData from '../data.json';
+import orderItems from '../data/order_items.json';
+import products from '../data/products.json';
+import categories from '../data/categories.json';
 
 export const useDashboardData = (filters) => {
   const transformedData = useMemo(() => {
@@ -19,11 +22,19 @@ export const useDashboardData = (filters) => {
 
   const filteredData = useMemo(() => {
     return transformedData.filter(order => {
-      const dateMatch = !filters.dateRange.start || !filters.dateRange.end || 
-        isWithinInterval(order.date, { 
+      // Date filter logic
+      let dateMatch = true;
+      if (filters.dateRange.start && filters.dateRange.end) {
+        dateMatch = isWithinInterval(order.date, { 
           start: startOfDay(parseISO(filters.dateRange.start)), 
-          end: startOfDay(parseISO(filters.dateRange.end)) 
+          end: endOfDay(parseISO(filters.dateRange.end)) 
         });
+      } else if (filters.dateRange.start) {
+        dateMatch = order.date >= startOfDay(parseISO(filters.dateRange.start));
+      } else if (filters.dateRange.end) {
+        dateMatch = order.date <= endOfDay(parseISO(filters.dateRange.end));
+      }
+
       const statusMatch = filters.status === 'all' || order.status === filters.status;
       const paymentMatch = filters.paymentStatus === 'all' || order.payment_status === filters.paymentStatus;
       const regionMatch = filters.region === 'all' || order.region === filters.region;
@@ -70,17 +81,37 @@ export const useDashboardData = (filters) => {
   }, [filteredData, transformedData]);
 
   const chartsData = useMemo(() => {
-    // Time Trend
-    const timeTrend = filteredData.reduce((acc, o) => {
+    // Time Trend (Daily)
+    const dailyTrend = filteredData.reduce((acc, o) => {
       acc[o.dateStr] = (acc[o.dateStr] || 0) + o.total_amount;
       return acc;
     }, {});
     
-    const timeTrendArray = Object.entries(timeTrend)
+    const dailyTrendArray = Object.entries(dailyTrend)
       .map(([date, amount]) => ({ date, amount }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // Region Revenue
+    // Weekly Trend
+    const weeklyTrend = filteredData.reduce((acc, o) => {
+      const week = format(o.date, 'yyyy-ww');
+      acc[week] = (acc[week] || 0) + o.total_amount;
+      return acc;
+    }, {});
+    const weeklyTrendArray = Object.entries(weeklyTrend)
+      .map(([date, amount]) => ({ date, amount }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    // Monthly Trend
+    const monthlyTrend = filteredData.reduce((acc, o) => {
+      const month = format(o.date, 'yyyy-MM');
+      acc[month] = (acc[month] || 0) + o.total_amount;
+      return acc;
+    }, {});
+    const monthlyTrendArray = Object.entries(monthlyTrend)
+      .map(([date, amount]) => ({ date, amount }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    // Region Revenue Comparison (High vs Low)
     const regionRev = filteredData.reduce((acc, o) => {
       acc[o.region] = (acc[o.region] || 0) + o.total_amount;
       return acc;
@@ -88,6 +119,57 @@ export const useDashboardData = (filters) => {
     
     const regionRevArray = Object.entries(regionRev)
       .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+
+    // Product Revenue
+    const filteredOrderIds = new Set(filteredData.map(o => o.id));
+    const productRevenueMap = orderItems
+      .filter(item => filteredOrderIds.has(item.order_id))
+      .reduce((acc, item) => {
+        const prodId = item.product_id;
+        const rev = parseFloat(item.price_at_purchase) * item.quantity;
+        acc[prodId] = (acc[prodId] || 0) + rev;
+        return acc;
+      }, {});
+
+    const productNames = products.reduce((acc, p) => {
+      acc[p.id] = p.name;
+      return acc;
+    }, {});
+
+    const productRevenueArray = Object.entries(productRevenueMap)
+      .map(([id, value]) => ({ 
+        id, 
+        name: productNames[id] || `Sản phẩm ${id}`, 
+        value 
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    // Category Revenue
+    const productCategories = products.reduce((acc, p) => {
+      acc[p.id] = p.parent_id;
+      return acc;
+    }, {});
+
+    const categoryNames = categories.reduce((acc, c) => {
+      acc[c.id] = c.name;
+      return acc;
+    }, {});
+
+    const categoryRevenueMap = Object.entries(productRevenueMap).reduce((acc, [prodId, rev]) => {
+      const catId = productCategories[prodId];
+      if (catId) {
+        acc[catId] = (acc[catId] || 0) + rev;
+      }
+      return acc;
+    }, {});
+
+    const categoryRevenueArray = Object.entries(categoryRevenueMap)
+      .map(([id, value]) => ({ 
+        id, 
+        name: categoryNames[id] || `Danh mục ${id}`, 
+        value 
+      }))
       .sort((a, b) => b.value - a.value);
 
     // Status Distribution
@@ -98,27 +180,25 @@ export const useDashboardData = (filters) => {
     
     const statusDistArray = Object.entries(statusDist).map(([name, value]) => ({ name, value }));
 
-    // Paid vs Pending Stacked
-    const paymentStacked = filteredData.reduce((acc, o) => {
-      const date = o.dateStr;
-      if (!acc[date]) acc[date] = { date, paid: 0, pending: 0 };
-      if (o.payment_status === 'paid') acc[date].paid += o.total_amount;
-      else acc[date].pending += o.total_amount;
-      return acc;
-    }, {});
+    // Top Products (High & Low)
+    const topProductsHigh = productRevenueArray.slice(0, 10);
+    const topProductsLow = [...productRevenueArray].reverse().slice(0, 10);
 
-    const paymentStackedArray = Object.values(paymentStacked).sort((a, b) => a.date.localeCompare(b.date));
+    // Top Categories (High & Low)
+    const topCategoriesHigh = categoryRevenueArray.slice(0, 10);
+    const topCategoriesLow = [...categoryRevenueArray].reverse().slice(0, 10);
 
     return {
-      timeTrend: timeTrendArray,
+      dailyTrend: dailyTrendArray,
+      weeklyTrend: weeklyTrendArray,
+      monthlyTrend: monthlyTrendArray,
       regionRevenue: regionRevArray,
       statusDistribution: statusDistArray,
-      paymentStacked: paymentStackedArray,
-      scatterData: filteredData.map(o => ({
-        time: o.date.getTime(),
-        value: o.total_amount,
-        code: o.order_code
-      }))
+      topProductsHigh,
+      topProductsLow,
+      topCategoriesHigh,
+      topCategoriesLow,
+      categoryContribution: categoryRevenueArray
     };
   }, [filteredData]);
 

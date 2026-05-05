@@ -1,17 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useDashboardData } from '../hooks/useDashboardData';
 import { KPISection } from './KPISection';
 import { ChartsSection } from './ChartsSection';
 import { DataTable } from './DataTable';
-import { CustomerTable } from './CustomerTable';
-import { RegionTable } from './RegionTable';
-import { Sidebar } from './Sidebar';
-import { Calendar, Bell, User, Sun, Moon } from 'lucide-react';
+import { User, Sun, Moon } from 'lucide-react';
 
 const Dashboard = ({ theme, toggleTheme }) => {
-  const [activeTab, setActiveTab] = useState('overview');
   const [filters, setFilters] = useState({
-    dateRange: { start: '2026-04-25', end: '2026-05-03' },
+    dateRange: { start: '', end: '' },
     status: 'all',
     paymentStatus: 'all',
     region: 'all',
@@ -20,54 +16,26 @@ const Dashboard = ({ theme, toggleTheme }) => {
 
   const { filteredData, stats, chartsData, uniqueRegions } = useDashboardData(filters);
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <KPISection stats={stats} timeTrend={chartsData.timeTrend} />;
-      case 'charts':
-        return <ChartsSection chartsData={chartsData} />;
-      case 'orders':
-        return <DataTable data={filteredData} />;
-      case 'customers':
-        return <CustomerTable data={filteredData} />;
-      case 'regions':
-        return <RegionTable data={filteredData} />;
-      default:
-        return <KPISection stats={stats} timeTrend={chartsData.timeTrend} />;
-    }
-  };
-
   return (
-    <div className="dashboard-container">
-      <Sidebar 
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        regions={uniqueRegions} 
-      />
-      
-      <main className="main-content">
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <div>
-            <h1 style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>
-              {activeTab === 'overview' ? 'Tổng quan doanh thu' : 
-               activeTab === 'charts' ? 'Phân tích biểu đồ' : 
-               activeTab === 'orders' ? 'Danh sách đơn hàng' : 
-               activeTab === 'customers' ? 'Dữ liệu khách hàng' : 'Phân tích khu vực'}
-            </h1>
-            <p style={{ color: 'var(--text-muted)' }}>Báo cáo hiệu suất kinh doanh thời gian thực.</p>
+    <div className="dashboard-container no-sidebar">
+      <main className="main-content full-width">
+        <header className="header glass">
+          <div className="header-title">
+            <h1>BI Performance Dashboard</h1>
+            <p>Báo cáo hiệu suất kinh doanh tổng hợp</p>
           </div>
           
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="header-actions">
              <button className="theme-toggle-btn" onClick={toggleTheme}>
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
              </button>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: '0.5rem' }}>
-                <div style={{ textAlign: 'right' }}>
-                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Nhóm Tứ Linh</div>
-                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>QTHTTT</div>
+             <div className="user-profile">
+                <div className="user-info">
+                   <span className="user-name">Nhóm Tứ Linh</span>
+                   <span className="user-dept">QTHTTT</span>
                 </div>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--primary-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--primary-color)' }}>
-                   <User size={20} color="var(--primary-color)" />
+                <div className="avatar">
+                   <User size={20} />
                 </div>
              </div>
           </div>
@@ -85,7 +53,7 @@ const Dashboard = ({ theme, toggleTheme }) => {
           <div className="filter-group">
             <label>Trạng thái</label>
             <select value={filters.status} onChange={(e) => setFilters(prev => ({...prev, status: e.target.value}))}>
-              <option value="all">Tất cả</option>
+              <option value="all">Tất cả trạng thái</option>
               <option value="pending">Chờ xử lý</option>
               <option value="shipped">Đang giao</option>
               <option value="delivered">Đã giao</option>
@@ -95,18 +63,56 @@ const Dashboard = ({ theme, toggleTheme }) => {
             <label>Khu vực</label>
             <select value={filters.region} onChange={(e) => setFilters(prev => ({...prev, region: e.target.value}))}>
               {uniqueRegions.map(r => (
-                <option key={r} value={r}>{r === 'all' ? 'Tất cả' : r}</option>
+                <option key={r} value={r}>{r === 'all' ? 'Tất cả khu vực' : r}</option>
               ))}
             </select>
           </div>
+          <div className="filter-group search-group">
+            <label>Tìm kiếm</label>
+            <input 
+              type="text" 
+              placeholder="Mã đơn, khách hàng..." 
+              value={filters.search} 
+              onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))} 
+            />
+          </div>
+          <div className="filter-group clear-btn">
+            <button 
+              className="btn-secondary" 
+              onClick={() => setFilters({
+                dateRange: { start: '', end: '' },
+                status: 'all',
+                paymentStatus: 'all',
+                region: 'all',
+                search: ''
+              })}
+            >
+              Đặt lại
+            </button>
+          </div>
         </div>
 
-        <div className="tab-content" style={{ animation: 'fadeIn 0.4s ease' }}>
-          {renderContent()}
-        </div>
+        <section className="dashboard-section">
+          <KPISection stats={stats} timeTrend={chartsData.dailyTrend} />
+        </section>
+
+        <section className="dashboard-section">
+          <div className="section-header">
+            <h2>Phân tích biểu đồ</h2>
+          </div>
+          <ChartsSection chartsData={chartsData} />
+        </section>
+
+        <section className="dashboard-section">
+          <div className="section-header">
+            <h2>Danh sách đơn hàng chi tiết</h2>
+          </div>
+          <DataTable data={filteredData} />
+        </section>
         
-        <footer style={{ marginTop: '4rem', padding: '2rem 0', borderTop: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>
-          © 2026 BI Performance System • Nhóm Tứ Linh Implementation
+        <footer className="footer glass" style={{ marginTop: '5rem', padding: '2rem', borderRadius: '20px 20px 0 0' }}>
+          <p>© 2026 BI Performance System • Thiết kế bởi Nhóm Tứ Linh Implementation</p>
+          <p style={{ marginTop: '0.5rem', opacity: 0.6 }}>Giải pháp phân tích dữ liệu kinh doanh thông minh thời gian thực.</p>
         </footer>
       </main>
     </div>
