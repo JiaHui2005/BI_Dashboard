@@ -92,23 +92,69 @@ const Dashboard = ({ theme, toggleTheme }) => {
           </div>
         </div>
 
-        <section className="dashboard-section">
-          <KPISection stats={stats} timeTrend={chartsData.dailyTrend} />
-        </section>
-
-        <section className="dashboard-section">
-          <div className="section-header">
-            <h2>Phân tích biểu đồ</h2>
+        {filteredData.length === 0 ? (
+          <div className="no-data-container glass" style={{ 
+            padding: '5rem 2rem', 
+            textAlign: 'center', 
+            marginTop: '2rem',
+            borderRadius: '24px',
+            background: 'rgba(255, 255, 255, 0.02)',
+            border: '1px dashed rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1.5rem'
+          }}>
+            <div className="no-data-icon" style={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              background: 'rgba(56, 189, 248, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--primary-color)',
+              marginBottom: '1rem'
+            }}>
+               <Moon size={40} />
+            </div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)' }}>Không có dữ liệu trong khoảng thời gian này</h2>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '500px', lineHeight: 1.6 }}>
+              Rất tiếc, hệ thống không tìm thấy bất kỳ đơn hàng nào từ ngày 
+              <span style={{ color: 'var(--primary-color)', fontWeight: 600 }}> {filters.dateRange.start || 'đầu'} </span> 
+              đến 
+              <span style={{ color: 'var(--primary-color)', fontWeight: 600 }}> {filters.dateRange.end || 'nay'}</span>. 
+              Vui lòng thử chọn một khoảng thời gian khác hoặc kiểm tra lại bộ lọc.
+            </p>
+            <button 
+              className="btn-primary" 
+              onClick={() => setFilters(prev => ({...prev, dateRange: { start: '', end: '' }}))}
+              style={{ padding: '0.75rem 2rem', borderRadius: '12px', fontWeight: 600 }}
+            >
+              Đặt lại thời gian
+            </button>
           </div>
-          <ChartsSection chartsData={chartsData} />
-        </section>
+        ) : (
+          <>
+            <section className="dashboard-section">
+              <KPISection stats={stats} timeTrend={chartsData.dailyTrend} />
+            </section>
 
-        <section className="dashboard-section">
-          <div className="section-header">
-            <h2>Danh sách đơn hàng chi tiết</h2>
-          </div>
-          <DataTable data={filteredData} />
-        </section>
+            <section className="dashboard-section">
+              <div className="section-header">
+                <h2>Phân tích biểu đồ</h2>
+              </div>
+              <ChartsSection chartsData={chartsData} />
+            </section>
+
+            <section className="dashboard-section">
+              <div className="section-header">
+                <h2>Danh sách đơn hàng chi tiết</h2>
+              </div>
+              <DataTable data={filteredData} />
+            </section>
+          </>
+        )}
         
         <footer className="footer glass" style={{ marginTop: '5rem', padding: '2rem', borderRadius: '20px 20px 0 0' }}>
           <p>© 2026 BI Performance System • Thiết kế bởi Nhóm Tứ Linh Implementation</p>
