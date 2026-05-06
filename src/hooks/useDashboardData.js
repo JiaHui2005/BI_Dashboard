@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { parseISO, format, isWithinInterval, startOfDay, endOfDay, subDays, differenceInDays } from 'date-fns';
-import rawData from '../data.json';
+import rawData from '../data/orders.json';
 import orderItems from '../data/order_items.json';
 import products from '../data/products.json';
 import categories from '../data/categories.json';
@@ -54,14 +54,26 @@ export const useDashboardData = (filters) => {
     const aov = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
     // Growth calculation (comparing with previous period of same length)
-    // Use the latest date from the actual data instead of "today" to ensure we have data to compare
-    const latestDate = transformedData.length > 0 
-      ? new Date(Math.max(...transformedData.map(o => o.date.getTime())))
-      : new Date();
-    
-    const periodLength = 7;
-    const currentPeriodStart = subDays(latestDate, periodLength);
-    const prevPeriodStart = subDays(currentPeriodStart, periodLength);
+    let currentPeriodStart, currentPeriodEnd, prevPeriodStart, prevPeriodEnd;
+
+    if (filters.dateRange.start && filters.dateRange.end) {
+      currentPeriodStart = startOfDay(parseISO(filters.dateRange.start));
+      currentPeriodEnd = endOfDay(parseISO(filters.dateRange.end));
+      const daysDiff = differenceInDays(currentPeriodEnd, currentPeriodStart) + 1;
+      prevPeriodStart = subDays(currentPeriodStart, daysDiff);
+      prevPeriodEnd = subDays(currentPeriodStart, 1);
+    } else {
+      // Use the latest date from the actual data instead of "today"
+      const latestDate = transformedData.length > 0 
+        ? new Date(Math.max(...transformedData.map(o => o.date.getTime())))
+        : new Date();
+      
+      const periodLength = 7;
+      currentPeriodEnd = latestDate;
+      currentPeriodStart = subDays(latestDate, periodLength);
+      prevPeriodStart = subDays(currentPeriodStart, periodLength);
+      prevPeriodEnd = subDays(currentPeriodStart, 1);
+    }
 
     // Helper to calculate revenue for a specific period
     const getRevForPeriod = (start, end) => transformedData
@@ -72,12 +84,12 @@ export const useDashboardData = (filters) => {
     const getOrdersForPeriod = (start, end) => transformedData
       .filter(o => o.date >= start && o.date <= end).length;
 
-    const currentRev = getRevForPeriod(currentPeriodStart, latestDate);
-    const prevRev = getRevForPeriod(prevPeriodStart, currentPeriodStart);
+    const currentRev = getRevForPeriod(currentPeriodStart, currentPeriodEnd);
+    const prevRev = getRevForPeriod(prevPeriodStart, prevPeriodEnd);
     const revenueGrowth = prevRev > 0 ? ((currentRev - prevRev) / prevRev) * 100 : 0;
 
-    const currentOrders = getOrdersForPeriod(currentPeriodStart, latestDate);
-    const prevOrders = getOrdersForPeriod(prevPeriodStart, currentPeriodStart);
+    const currentOrders = getOrdersForPeriod(currentPeriodStart, currentPeriodEnd);
+    const prevOrders = getOrdersForPeriod(prevPeriodStart, prevPeriodEnd);
     const ordersGrowth = prevOrders > 0 ? ((currentOrders - prevOrders) / prevOrders) * 100 : 0;
 
     // For AOV growth
@@ -164,7 +176,7 @@ export const useDashboardData = (filters) => {
 
     // Category Revenue
     const productCategories = products.reduce((acc, p) => {
-      acc[p.id] = p.parent_id;
+      acc[p.id] = p.category_id;
       return acc;
     }, {});
 
